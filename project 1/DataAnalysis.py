@@ -23,7 +23,7 @@ plt.title('Books Sold Per Hour on Amazon')
 plt.xlabel('Hour')
 plt.ylabel('# of Books Sold')
 
-def graph(f, steps):
+def graph(f, steps, LOBF_str):
   """Graph line of best fit
 
   Passed a lambda function of the line of best fit (LOBF) and the numbers
@@ -36,7 +36,8 @@ def graph(f, steps):
   """
   x = np.array(steps)
   y = f(x)
-  plt.plot(x,y,linewidth=0.85,color='black')
+  plt.plot(x,y,linewidth=0.85, color='blue', label=LOBF_str)
+  plt.legend(loc='upper left',  fontsize='medium')
   plt.show()
 
 # Load data and remove nan data
@@ -47,7 +48,7 @@ data = data[rows_mask]
 # Assign axis variables and add to plot
 x = [time[0] for time in data]
 y = [sales[1] for sales in data]
-plt.scatter(x, y, s=0.85, marker='o', color='blue')
+plt.scatter(x, y, s=0.85, marker='o', color='black')
 
 # Calculating LOBF formula
 n = len(data) # no. of obs
@@ -61,4 +62,6 @@ denominator = (n * x_squared_sum) - (x_sum**2)
 slope = numerator / denominator
 intercept = (y_sum - (slope * x_sum)) / n
 
-graph(lambda x : intercept + (slope * x), range(0,n))
+LOBF = 'y=' + str(round(intercept,2)) + '+' + str(round(slope,2)) + 'x'  
+
+#graph(lambda x : intercept + (slope * x), range(0,n), LOBF)
