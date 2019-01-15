@@ -45,6 +45,18 @@ class DataAnalysis(object):
         else:
           print("The filter you entered is not valid. No filter applied.\n Check load() method.")
 
+  def plotData(self):
+    # matplotlib customizations
+    plt.style.use('bmh')
+    plt.title('Books Sold Per Hour on Amazon')
+    plt.xlabel('Hour')
+    plt.ylabel('# of Books Sold')
+   
+    x = [time[0] for time in self.data]
+    y = [sales[1] for sales in self.data]
+    plt.scatter(x,y,s=0.85, marker='o', color='black')
+    plt.show()
+
   def SLR(self):
     # Assign axis variables and add to plot
     x = [time[0] for time in self.data]
@@ -151,11 +163,11 @@ num_obs, b1, b2, b3, LOBF_qr = data.QR()
 #data.graph(lambda x : b1 + (b2*x) + (b3*(x**2)), range(0,num_obs), LOBF_qr)
 
 # Graph both on same plot
-y_slr = [intercept + (slope*x) for x in data.x] #TODO this will throw an error!!!
-y_qr =
+#y_slr = [intercept + (slope*x) for x in data.x] #TODO this will throw an error!!!
+#y_qr =
 functions = [lambda x : intercept + (slope*x), lambda x : b1 + (b2*x) + (b3*(x**2))] 
 labels = [LOBF_slr, LOBF_qr]
-data.graph_multiple_functions(functions, range(0, num_obs), labels)
-
+#data.graph_multiple_functions(functions, range(0, num_obs), labels)
+data.plotData()
 # can you convert the outputs of the lambdas into a numpy array and then 
 # pass those values of x to the graphing function?
