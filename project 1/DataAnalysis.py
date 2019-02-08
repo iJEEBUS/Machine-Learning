@@ -15,13 +15,13 @@ Todo:
 @version 01.09.2019 (01.09.2019)
 """
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 # matplotlib customizations
-plt.style.use('bmh')
-plt.title('Books Sold Per Hour on Amazon')
-plt.xlabel('Hour')
-plt.ylabel('# of Books Sold')
+#plt.style.use('bmh')
+#plt.title('Books Sold Per Hour on Amazon')
+#plt.xlabel('Hour')
+#plt.ylabel('# of Books Sold')
 
 def graph(f, steps, LOBF_str):
   """Graph line of best fit
@@ -48,7 +48,7 @@ data = data[rows_mask]
 # Assign axis variables and add to plot
 x = [time[0] for time in data]
 y = [sales[1] for sales in data]
-plt.scatter(x, y, s=0.85, marker='o', color='black')
+#plt.scatter(x, y, s=0.85, marker='o', color='black')
 
 # Calculating LOBF formula
 n = len(data) # no. of obs
