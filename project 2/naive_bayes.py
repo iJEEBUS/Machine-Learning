@@ -2,9 +2,10 @@ import pandas as pd
 import csv
 from math import log, exp
 
+stop_words = [ "a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "are", "as", "at", "be", "because", "been", "before", "being", "below", "between", "both", "but", "by", "could", "did", "do", "does", "doing", "down", "during", "each", "few", "for", "from", "further", "had", "has", "have", "having", "he", "he'd", "he'll", "he's", "her", "here", "here's", "hers", "herself", "him", "himself", "his", "how", "how's", "i", "i'd", "i'll", "i'm", "i've", "if", "in", "into", "is", "it", "it's", "its", "itself", "let's", "me", "more", "most", "my", "myself", "nor", "of", "on", "once", "only", "or", "other", "ought", "our", "ours", "ourselves", "out", "over", "own", "same", "she", "she'd", "she'll", "she's", "should", "so", "some", "such", "than", "that", "that's", "the", "their", "theirs", "them", "themselves", "then", "there", "there's", "these", "they", "they'd", "they'll", "they're", "they've", "this", "those", "through", "to", "too", "under", "until", "up", "very", "was", "we", "we'd", "we'll", "we're", "we've", "were", "what", "what's", "when", "when's", "where", "where's", "which", "while", "who", "who's", "whom", "why", "why's", "with", "would", "you", "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves"]
+
 # loading training data into data frame
 all_data = pd.read_csv("./data/training.txt", sep="\n")
-#all_data = all_data.sample(250)
 
 '''
 1.0 Collect all words occurring in the sample documents
@@ -18,7 +19,10 @@ for row in range(num_rows):
     for post in all_data.iloc[row]:
         split_post = post.split()[1:]
         for word in split_post:
-            vocab.add(word)
+            if word in stop_words:
+                pass
+            else:
+                vocab.add(word)
             
 '''
 2.0 Create a document dictionary where key is a class and values are all posts in that class
@@ -83,18 +87,17 @@ for word in vocab:
 
 '''
 3.0 Classification - classify new data
-# TODO need to get this working
 '''
 print("Classifying new data...")
 total_correct_classifications = 0
 lowest_num = 0
 max_probability = None
-#new_data = pd.read_csv('./data/training.txt', sep='\n')
-#num_rows = len(new_data.index) // 10
+new_data = pd.read_csv('./data/testing.txt', sep='\n')
+num_rows = len(new_data.index)
 
 for row in range(num_rows):
 
-    for post in all_data.iloc[row]:
+    for post in new_data.iloc[row]:
         class_probabilities = {}
         max_probability = ['', None] # (class, probability)
         probability = 0.0
@@ -115,8 +118,6 @@ for row in range(num_rows):
     
         # find the post with the highest probability
         for classification in text.keys():
-#            print(classification, class_probabilities[classification])
-            
             if (max_probability[1] == None):
                 max_probability[0] = classification
                 max_probability[1] = class_probabilities[classification]
@@ -137,4 +138,3 @@ for row in range(num_rows):
 accuracy = (total_correct_classifications / num_rows)
 print("Accuracy: %s" % (accuracy))
 print(num_rows)
-
