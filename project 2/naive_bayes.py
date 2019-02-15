@@ -4,7 +4,7 @@ from math import log, exp
 
 # loading training data into data frame
 all_data = pd.read_csv("./data/training.txt", sep="\n")
-all_data = all_data.sample(100)
+#all_data = all_data.sample(250)
 
 '''
 1.0 Collect all words occurring in the sample documents
@@ -87,7 +87,8 @@ for word in vocab:
 '''
 print("Classifying new data...")
 total_correct_classifications = 0
-
+lowest_num = 0
+max_probability = None
 #new_data = pd.read_csv('./data/training.txt', sep='\n')
 #num_rows = len(new_data.index) // 10
 
@@ -95,36 +96,45 @@ for row in range(num_rows):
 
     for post in all_data.iloc[row]:
         class_probabilities = {}
-        max_probability = ('', None) # (class, probability)
+        max_probability = ['', None] # (class, probability)
         probability = 0.0
         correct_classification = post.split()[0]
         only_content = ' '.join(post.split()[1:])
-        print(len(class_probabilities.keys()))
     
-    for classification in text.keys():
-        for word in only_content.split():
-            if word in word_occurrence_estimate.keys():
-                probability += log(word_occurrence_estimate[word][classification]) # use log to account for underflow
-            else:
-                prob = log(1) - log((len(text[classification]) + len(vocab)))
-                probability += prob
-        class_probabilities[classification] = probability
-    print('\n')
-    # set the max probability of each posts classification
-    for classification in class_probabilities.keys():
-        print(classification, class_probabilities[classification])
-        if (max_probability[1] == None):
-            max_probability = (classification, probability)
-        elif (class_probabilities[classification] < max_probability[1]):
-            #print("New highest prob")
-            max_probability = (classification, probability)
+        # calculate probability that a word belongs to a certain class of post
+        for classification in text.keys():
+            max_probability = ['', None] # (class, probability)
+            probability = 0.0
+            for word in only_content.split():
+                if word in word_occurrence_estimate.keys():
+                    probability += log(word_occurrence_estimate[word][classification]) # use log to account for underflow
+                else:
+                    prob = log(1) - log((len(text[classification]) + len(vocab)))
+                    probability += prob
+            class_probabilities[classification] = probability
+    
+        # find the post with the highest probability
+        for classification in text.keys():
+#            print(classification, class_probabilities[classification])
             
-    # counting correct assignments        
-    if correct_classification == max_probability[0]:
-        total_correct_classifications += 1
+            if (max_probability[1] == None):
+                max_probability[0] = classification
+                max_probability[1] = class_probabilities[classification]
+            elif ((abs(class_probabilities[classification]) < abs(max_probability[1])) ):
+                max_probability[0] = classification
+                max_probability[1] = class_probabilities[classification]
+                lowest_num = max_probability[1]
+                
+        # counting correct assignments        
+        correct = (correct_classification == max_probability[0])
+        if correct:
+            total_correct_classifications += 1
+            print(correct)
+        else:
+            print("%-10s :: %-10s :: %-10s" % (correct, correct_classification, max_probability[0]))
         
-    print("%s  ::  %s" % (correct_classification, max_probability[0]))
 
 accuracy = (total_correct_classifications / num_rows)
 print("Accuracy: %s" % (accuracy))
+print(num_rows)
 
