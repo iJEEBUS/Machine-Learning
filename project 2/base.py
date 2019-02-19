@@ -1,17 +1,15 @@
 import pandas as pd
 import csv
 from math import log, exp
-import datetime
 
 # loading training data into data frame
 all_data = pd.read_csv("./data/training.txt", sep="\n")
-all_data = all_data.head(1300)
-#all_data = all_data.sample(1300)
+all_data = all_data.sample(250)
 
 '''
 1.0 Collect all words occurring in the sample documents
 '''
-print("Loading and processing data...")
+print("Collecting all distinct words...")
 # collect all distinct words
 vocab = set()
 num_rows = len(all_data.index) 
@@ -25,7 +23,7 @@ for row in range(num_rows):
 '''
 2.0 Create a document dictionary where key is a class and values are all posts in that class
 '''
-print(".")
+print("Creating document dictionary...")
 docs = {}
 
 for row in range(num_rows):
@@ -41,7 +39,7 @@ for row in range(num_rows):
 '''
 2.1 Generate the probability estimate of each class
 '''
-print("..")
+print("Generating probability estimates for each classification...")
 prob_estimates = {}
 
 for classification in docs.keys():
@@ -52,7 +50,7 @@ for classification in docs.keys():
 2.2 Create a single document per class.
     Stored as tuple (n, text) where n is the number of word positions in text
 '''
-print("...")
+print("Merging all like documents into one...")
 text = {}
 
 for classification in docs.keys():
@@ -63,7 +61,7 @@ for classification in docs.keys():
 '''
 2.3 determine the number of times each unique word appears in each Text 
 '''
-print("....")
+print("Calculating word occurrence probabilities...")
 word_occurrence_estimate = {}
 
 count = 0
@@ -80,28 +78,18 @@ for word in vocab:
         except:
             word_occurrence_estimate[word] = {}
             word_occurrence_estimate[word][classification] = estimate
+    print("%s / %s words processed" % (count, tot_words))
 
 
 '''
 3.0 Classification - classify new data
 '''
 print("Classifying new data...")
-true_positive = 0
-false_positive = 0
-true_negative = 0
-false_negative = 0
-accuracy = 0
-
-
-# Used to make confusion matrix
-correct_answers = []
-predicted_answers = []
-
+total_correct_classifications = 0
 lowest_num = 0
 max_probability = None
 new_data = pd.read_csv('./data/testing.txt', sep='\n')
-new_data = new_data.head(1000)
-#new_data = new_data.sample(200)
+new_data = new_data.sample(250)
 num_rows = len(new_data.index)
 
 for row in range(num_rows):
@@ -111,7 +99,6 @@ for row in range(num_rows):
         max_probability = ['', None] # (class, probability)
         probability = 0.0
         correct_classification = post.split()[0]
-        correct_answers.append(correct_classification) # add correct answer to ans list
         only_content = ' '.join(post.split()[1:])
     
         # calculate probability that a word belongs to a certain class of post
@@ -136,68 +123,15 @@ for row in range(num_rows):
                 max_probability[1] = class_probabilities[classification]
                 lowest_num = max_probability[1]
                 
-      
-        class_guess = max_probability[0]
-        predicted_answers.append(class_guess)
-        
-        # counting correct assignments  
-        correct = (correct_classification == class_guess)
+        # counting correct assignments        
+        correct = (correct_classification == max_probability[0])
         if correct:
-            true_positive += 1
-           
-    
+            total_correct_classifications += 1
+            print(correct)
+        else:
+            print("%-10s :: %-10s :: %-10s" % (correct, correct_classification, max_probability[0]))
+        
 
-'''
-3.1 Scoring output with precision, recall, accuracy, and misclassification
-'''
-# Accuracy
-accuracy = (true_positive / num_rows)
-
-# Misclassification
-misclassification = (num_rows - true_positive) / (num_rows)
-
-# Create the confusion matrix
-actual = pd.Series(correct_answers, name='Actual')
-pred = pd.Series(predicted_answers, name='Predicted')
-confusion_matrix = pd.crosstab(actual, pred)
-normalized_confusion_matrix = confusion_matrix / confusion_matrix.sum(axis=1)
-
-# Recall - the fraction of events where we correctly declared C out of all of the cases where the true of state of the world is C
-recall = 0.0
-recall_list = []
-for column in confusion_matrix:
-    tp = confusion_matrix[column][column]
-    tp_and_fn = sum(confusion_matrix[column])
-    recall = tp / tp_and_fn
-    recall_list.append(recall)
-recall = sum(recall_list) / len(recall_list)
-    
-
-# Precision -  the fraction of events where we correctly declared C out of all instances where the algorithm declared C
-precision = 0.0
-precision_list = []
-for index, row in confusion_matrix.iterrows():
-    tp = confusion_matrix[index][index]
-    tp_and_fp = sum(row)
-    precision = tp / tp_and_fp
-    precision_list.append(precision)
-precision = sum(precision_list) / len(precision_list)
-
-# F1 - combine precision and recall into one metric
-F1 = 2 * ((precision * recall) / (precision + recall))
-    
-with open('output.txt', 'a') as fout:
-    fout.write("Method: %s\n" % ('Base Algorithm'))
-    fout.write("Run at: %s\n" % (datetime.datetime.now()))
-    fout.write("Accuracy: %s\n" % (accuracy))
-    fout.write("Precision: %s\n" % (precision))
-    fout.write("Recall: %s\n" % (recall))
-    fout.write("F1: %s\n" % (F1))
-    fout.write("Misclassification %s\n" % (misclassification))
-    fout.write("---------------------------------------------\n")
-    
+accuracy = (total_correct_classifications / num_rows)
 print("Accuracy: %s" % (accuracy))
-print("Misclassification: %s" % (misclassification))
-print("Precision: %s" % (precision))
-print("Recall %s" % (recall))
-print("F1: %s" % (F1))
+print(num_rows)

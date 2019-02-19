@@ -3,6 +3,8 @@ import csv
 from math import log, exp
 import datetime
 
+stop_words = [ "a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "are", "as", "at", "be", "because", "been", "before", "being", "below", "between", "both", "but", "by", "could", "did", "do", "does", "doing", "down", "during", "each", "few", "for", "from", "further", "had", "has", "have", "having", "he", "he'd", "he'll", "he's", "her", "here", "here's", "hers", "herself", "him", "himself", "his", "how", "how's", "i", "i'd", "i'll", "i'm", "i've", "if", "in", "into", "is", "it", "it's", "its", "itself", "let's", "me", "more", "most", "my", "myself", "nor", "of", "on", "once", "only", "or", "other", "ought", "our", "ours", "ourselves", "out", "over", "own", "same", "she", "she'd", "she'll", "she's", "should", "so", "some", "such", "than", "that", "that's", "the", "their", "theirs", "them", "themselves", "then", "there", "there's", "these", "they", "they'd", "they'll", "they're", "they've", "this", "those", "through", "to", "too", "under", "until", "up", "very", "was", "we", "we'd", "we'll", "we're", "we've", "were", "what", "what's", "when", "when's", "where", "where's", "which", "while", "who", "who's", "whom", "why", "why's", "with", "would", "you", "you'd", "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves"]
+
 # loading training data into data frame
 all_data = pd.read_csv("./data/training.txt", sep="\n")
 all_data = all_data.head(1300)
@@ -20,7 +22,10 @@ for row in range(num_rows):
     for post in all_data.iloc[row]:
         split_post = post.split()[1:]
         for word in split_post:
-            vocab.add(word)
+            if word in stop_words:
+                pass
+            else:
+                vocab.add(word)
             
 '''
 2.0 Create a document dictionary where key is a class and values are all posts in that class
@@ -187,7 +192,7 @@ precision = sum(precision_list) / len(precision_list)
 F1 = 2 * ((precision * recall) / (precision + recall))
     
 with open('output.txt', 'a') as fout:
-    fout.write("Method: %s\n" % ('Base Algorithm'))
+    fout.write("Method: %s\n" % ('NB - Stop Words'))
     fout.write("Run at: %s\n" % (datetime.datetime.now()))
     fout.write("Accuracy: %s\n" % (accuracy))
     fout.write("Precision: %s\n" % (precision))
