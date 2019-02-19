@@ -7,7 +7,7 @@ stop_words = [ "a", "about", "above", "after", "again", "against", "all", "am", 
 
 # loading training data into data frame
 all_data = pd.read_csv("./data/training.txt", sep="\n")
-all_data = all_data.head(1300)
+#all_data = all_data.head(1300)
 #all_data = all_data.sample(1300)
 
 '''
@@ -105,7 +105,7 @@ predicted_answers = []
 lowest_num = 0
 max_probability = None
 new_data = pd.read_csv('./data/testing.txt', sep='\n')
-new_data = new_data.head(1000)
+#new_data = new_data.head(1000)
 #new_data = new_data.sample(200)
 num_rows = len(new_data.index)
 
@@ -153,46 +153,49 @@ for row in range(num_rows):
     
 
 '''
-3.1 Scoring output with precision, recall, accuracy, and misclassification
+3.1 Scoring output with precision, recall, accuracy, F!, and misclassification
 '''
 # Accuracy
 accuracy = (true_positive / num_rows)
 
 # Misclassification
 misclassification = (num_rows - true_positive) / (num_rows)
+ 
+# Precision -  the fraction of events where we correctly declared C out of all instances where the algorithm declared C
+# Recall - the fraction of events where we correctly declared C out of all of the cases where the true of state of the world is C
+# F1 - combine precision and recall into one metric
 
 # Create the confusion matrix
+precision = 0.0
+recall = 0.0
+
+precision_list = []
+recall_list = []
+
 actual = pd.Series(correct_answers, name='Actual')
 pred = pd.Series(predicted_answers, name='Predicted')
 confusion_matrix = pd.crosstab(actual, pred)
 normalized_confusion_matrix = confusion_matrix / confusion_matrix.sum(axis=1)
 
-# Recall - the fraction of events where we correctly declared C out of all of the cases where the true of state of the world is C
-recall = 0.0
-recall_list = []
-for column in confusion_matrix:
-    tp = confusion_matrix[column][column]
-    tp_and_fn = sum(confusion_matrix[column])
-    recall = tp / tp_and_fn
-    recall_list.append(recall)
-recall = sum(recall_list) / len(recall_list)
-    
-
-# Precision -  the fraction of events where we correctly declared C out of all instances where the algorithm declared C
-precision = 0.0
-precision_list = []
 for index, row in confusion_matrix.iterrows():
     tp = confusion_matrix[index][index]
     tp_and_fp = sum(row)
+    tp_and_fn = sum(confusion_matrix[index])
     precision = tp / tp_and_fp
+    recall = tp / tp_and_fn
     precision_list.append(precision)
+    recall_list.append(recall)
 precision = sum(precision_list) / len(precision_list)
+recall = sum(recall_list) / len(recall_list)
 
-# F1 - combine precision and recall into one metric
 F1 = 2 * ((precision * recall) / (precision + recall))
     
+    
+'''
+3.2 Report statistics / Write the statistics to the output file
+'''
 with open('output.txt', 'a') as fout:
-    fout.write("Method: %s\n" % ('NB - Stop Words'))
+    fout.write("Method: %s\n" % ('Nb - Stop Words'))
     fout.write("Run at: %s\n" % (datetime.datetime.now()))
     fout.write("Accuracy: %s\n" % (accuracy))
     fout.write("Precision: %s\n" % (precision))
