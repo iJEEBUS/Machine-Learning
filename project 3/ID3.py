@@ -1,7 +1,12 @@
-import math
-from collections import Counter
-import Node
-import time
+"""
+An implementation of the ID3 (decision tree) algorithm in the language of Python3.
+
+@author Ron Rounsifer
+"""
+import math # for log
+from collections import Counter # for first case
+import Node # node structure
+import time # to time execution
 
 def ID3(attributes, data, target, count):
 	"""
@@ -9,7 +14,7 @@ def ID3(attributes, data, target, count):
     
 	Returns the final tree structure
 	"""
-	count += 1
+	count += 1 # for debugging purposes
 	data = data[:]
 	target_index = int(attributes.index(target))
 	values = [obs[target_index] for obs in data ]
@@ -30,10 +35,8 @@ def ID3(attributes, data, target, count):
 
         # create the tree with the best attribute at the root
 		decision_tree = {best:{}}
-		#print("Current attribute: %s" % (best))
 		# for each value in the attribute field, create a new node
 		for value in get_values(data, attributes, best):
-			#print("			Building node for %s..." % (value))
 
 			# create a tree for current value
 			examples = get_examples(data, attributes, best, value)
@@ -42,9 +45,8 @@ def ID3(attributes, data, target, count):
 			s_tree = ID3(new_attributes, examples, target, count)
             
 			decision_tree[best][value] = s_tree
-		
+			
 		return decision_tree
-
 def case_one(data):
     """
     Check if all of the observations in the data have the same class.
@@ -63,7 +65,6 @@ def case_one(data):
         only_class = list(class_count)[0]
         
     return only_class
-
 def best_attribute(attributes, data, target):
     """
     Determines the best attribute to split the tree at. This is determined
@@ -87,6 +88,9 @@ def gain(attributes, data, a, target):
     """
     Calcuates the gain of each attribute passed, negating the target
     attribute. 
+
+    Returns:
+    	info_gain - float - the total info gain for the target attribute
     """
     value_counts = {}
     value_entropy = 0.0
@@ -114,6 +118,9 @@ def gain(attributes, data, a, target):
 def entropy(attributes, data, target):
     """
     Calculates the entropy of the data passed for the target attribute.
+
+    Returns:
+    	value_entropy - float - the gain the value provides to the attribute
     """
     value_counts = {}
     value_entropy = 0.0
@@ -134,7 +141,6 @@ def entropy(attributes, data, target):
         value_entropy += (-prob) * math.log(prob, 2)
 
     return value_entropy
-
 def get_values(data, attributes, best):
     """
     Get a list of values found in the best attribute column
@@ -152,6 +158,9 @@ def get_values(data, attributes, best):
 def get_examples(data, attributes, best, val):
 	"""
 	Get the list of all values in the best column that num_matches the value.
+
+	Returns
+		examples - list - list of all values in the best column
 	"""
 	examples = [[]]
 	num_matches = []
@@ -171,8 +180,12 @@ def get_examples(data, attributes, best, val):
 	examples.remove([])
 
 	return examples
-
 def test_model(data, attributes, decision_tree, **kwargs):
+	"""Test decision tree
+
+	Test the decision tree passed as an argument to see how well it performs
+	on previously unseen data.
+	"""
 	count = 0
 	result = ""
 
@@ -226,7 +239,6 @@ def test_model(data, attributes, decision_tree, **kwargs):
 				temp_tree = temp_tree[value]
 			else:
 				# cannot find a sub-branch or result
-				#print("Cannot process input %s" % (count) )
 				cannot_process += 1
 				break;
 
@@ -301,7 +313,6 @@ def statistics(confusion_matrix, num_matches, N, cannot_process):
 		temp_list.append(recall)
 		average_recall = (sum(temp_list)/len(temp_list))
 	print(f'Recall:		{average_recall:.2g}')
-
 def read_data(file):
     """
     Reads the data in and returns two lists: the attributes and the data
@@ -321,18 +332,32 @@ def read_data(file):
     data = [obs.rsplit()[0].split(',') for obs in data]
     
     return attributes, data
+def execute(train, test):
+	"""
+	Execute the ID3 algorithm on the training data.
+	Test the tree on the testing data.
+	Created for the sole purpose of timing the execution.
+	"""
 
-def execute():
-
-	attr_train, data_train = read_data('./data/train.txt')
-	attr_test, data_test = read_data('./data/test.txt')
+	attr_train, data_train = read_data(train)
+	attr_test, data_test = read_data(test)
 
 	# run the algorithm by passing the attributes and data
 	tree = ID3(attr_train, data_train, 'classification', 0)
+	#show_tree(tree)
 	test_model(data_test, attr_test, tree, statistics=True)
 
+
+def show_tree(decision_tree):
+	for key in decision_tree.keys():
+		print( key , list(decision_tree[key]))
+		for i in decision_tree[key]:
+			print(i, decision_tree[key][i])
+			print()
+		
+		
 begin = time.process_time()
-execute()
+execute('./data/train.txt', './data/test.txt')
 end = time.process_time()
 exec_time = (end-begin)
 print(f'Time: 		{exec_time:.5g}s on CPU\n')

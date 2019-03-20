@@ -1,3 +1,8 @@
+"""
+The Node structure for the ID3 algorithm implementation.
+
+@author Ron Rounsifer
+"""
 class Node():
     value = ''
     children = []
