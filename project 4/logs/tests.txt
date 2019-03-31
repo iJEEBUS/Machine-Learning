@@ -1,0 +1,14 @@
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 5000
+Learning rate: 0.03
+Accuracy: 0.9209794101279911
+Model building time: 13.165602918
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 7000
+Learning rate: 0.02
+Accuracy: 0.9187534780189204
+Model building time: 18.428176622

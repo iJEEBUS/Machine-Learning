@@ -1,4 +1,5 @@
 import numpy as np # for linear algebra
+import time # to time the training period
 
 class Neural_Network():
 	
@@ -7,19 +8,13 @@ class Neural_Network():
 		self.training_data = None
 		self.training_y = None
 		self.y_vectorized = None # (3000 x 10)		
-	
 		# Testing data with solutions (3000 x 64)
 		self.testing_data = None
 		self.testing_y = None
-		
 		# Weights
 		self.theta = np.ones((64,10), dtype=float)	
-		
-		# Output matrix
-		self.output = None
-		
-		# Cost of function
-		self.cost = None
+		# how long it took to train the model
+		self.time_to_train = None
 
 	def load_data(self, training, testing):
 		# Create ndarrays from the data
@@ -85,20 +80,37 @@ class Neural_Network():
 		cost = (np.matmul(-y.T, np.log(h)) - np.matmul((1-y.T), np.log(1-h))) / m
 		return cost
 		
-	def learn(self, iterations, learning_rate):
+	def learn(self, iterations, learning_rate, fout):
 		"""
 		Train the network on the data
 		"""
-			
-		print("Adding bias to input data...")
+		begin = time.process_time()	
 		self.init_bias()
 
 		X = self.training_data
 		Y = self.y_vectorized
+		print("Building model...")
+		# Since I am using linear algebra, all of the errors are propogated
+		# back into the weights immediately (backprop)
 		for i in range(iterations):
 			self.theta = self.gradient_descent(self.theta, learning_rate, X, Y)
+		end = time.process_time()
+		self.time_to_train = end-begin
+		print("Model complete.")
+		np.savetxt(f"./models/{fout}", self.theta, delimiter=',')
+	def log(self, training, testing, iterations, alpha, correct, num_preds):
+		accuracy = correct / num_preds
+		with open("./logs/tests.txt", 'a') as f:
+			f.write("============================================\n")
+			f.write(f"Training data: {training}\n")
+			f.write(f"Testing data: {testing}\n")
+			f.write(f"Num iterations: {iterations}\n")
+			f.write(f"Learning rate: {alpha}\n")
+			f.write(f"Accuracy: {accuracy}\n")
+			f.write(f"Model building time: {self.time_to_train}\n")
+	
+	def test(self, training, testing, iterations, alpha):
 		
-	def test(self):
 		predictions = []
 		model = self.sigmoid(np.matmul(self.testing_data, self.theta))
 		for prediction in model:
@@ -110,14 +122,15 @@ class Neural_Network():
 		for index in range(num_preds):
 			if predictions[index] == self.testing_y[index]:
 				correct += 1
-		
-		print(correct, (correct/num_preds))
+		self.log(training, testing, iterations, alpha, correct, num_preds)
 
 
-
-iterations = 50000
-learning_step = 0.04
+train = "./data/training.txt"
+test = "./data/testing.txt"
+fout = "handwriting.nn"
+iterations = 7000
+learning_step = 0.02
 net = Neural_Network()
-net.load_data("./data/training.txt", "./data/testing.txt")
-net.learn(iterations, learning_step)
-net.test()
+net.load_data(train, test)
+net.learn(iterations, learning_step, fout)
+net.test(train, test, iterations, learning_step)
