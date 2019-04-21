@@ -1,14 +1,224 @@
 ============================================
 Training data: ./data/training.txt
 Testing data: ./data/testing.txt
-Num iterations: 5000
-Learning rate: 0.03
+Num iterations: 3000
+Learning rate: 0.05
 Accuracy: 0.9209794101279911
-Model building time: 13.165602918
+Model building time: 7.932783675
 ============================================
 Training data: ./data/training.txt
 Testing data: ./data/testing.txt
-Num iterations: 7000
-Learning rate: 0.02
-Accuracy: 0.9187534780189204
-Model building time: 18.428176622
+Num iterations: 2500
+Learning rate: 0.07
+Accuracy: 0.9237618252643295
+Model building time: 6.655014584
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 1000
+Learning rate: 0.1
+Accuracy: 0.9154145798553144
+Model building time: 2.627622544
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 1000
+Learning rate: 0.05
+Accuracy: 0.9104062326099054
+Model building time: 2.68712461
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 5000
+Learning rate: 0.05
+Accuracy: 0.9259877573734001
+Model building time: 12.945895592
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 500
+Learning rate: 0.05
+Accuracy: 0.902615470228158
+Model building time: 1.3795435399999998
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 500
+Learning rate: 0.1
+Accuracy: 0.910962715637173
+Model building time: 1.3554850859999998
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 300
+Learning rate: 0.1
+Accuracy: 0.9037284362826934
+Model building time: 0.819018432
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 300
+Learning rate: 0.07
+Accuracy: 0.9003895381190874
+Model building time: 0.8276475769999999
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 300
+Learning rate: 0.05
+Accuracy: 0.8953811908736784
+Model building time: 0.829890988
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 3000
+Learning rate: 0.05
+Accuracy: 0.9209794101279911
+Model building time: 7.936980446
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 3000
+Learning rate: 0.1
+Accuracy: 0.9298831385642737
+Model building time: 7.899874073
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 3000
+Learning rate: 0.1
+Accuracy: 0.9298831385642737
+Model building time: 7.982717213
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 3000
+Learning rate: 0.1
+Accuracy: 0.9298831385642737
+Model building time: 7.726473433000001
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 3000
+Learning rate: 0.1
+Accuracy: 0.9298831385642737
+Model building time: 7.987264606999999
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 1000
+Learning rate: 0.05
+Accuracy: 0.555370061213133
+Model building time: 15.840969956
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 1000
+Learning rate: 0.05
+Accuracy: 0.09682804674457429
+Model building time: 15.415673131
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 3000
+Learning rate: 0.1
+Accuracy: 0.9315525876460768
+Model building time: 8.105430415
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 1000
+Learning rate: 0.05
+Accuracy: 0.9070673344462994
+Model building time: 3.6304018950000003
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 1000
+Learning rate: 0.05
+Accuracy: 0.09738452977184196
+Model building time: 18.720159257000002
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 1000
+Learning rate: 0.05
+Accuracy: 0.8391764051196439
+Model building time: 18.658785392
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 1000
+Learning rate: 0.05
+Accuracy: 0.8569838619922092
+Model building time: 20.317738248999998
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 1000
+Learning rate: 0.05
+Accuracy: 0.8848080133555927
+Model building time: 18.761679061000002
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 1000
+Learning rate: 0.05
+Accuracy: 0.8291597106288259
+Model building time: 20.002487337999998
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 1000
+Learning rate: 0.05
+Accuracy: 0.09961046188091263
+Model building time: 12.465060344
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 1000
+Learning rate: 0.05
+Accuracy: 0.9003895381190874
+Model building time: 3.708788121
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 500
+Learning rate: 0.1
+Accuracy: 0.8948247078464107
+Model building time: 1.860118014
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 500
+Learning rate: 0.1
+Accuracy: 0.9131886477462438
+Model building time: 1.845876304
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 500
+Learning rate: 0.1
+Accuracy: 0.10127991096271564
+Model building time: None
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 500
+Learning rate: 0.1
+Accuracy: 0.9081803005008348
+Model building time: 1.8375639199999998
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 500
+Learning rate: 0.1
+Accuracy: 0.900946021146355
+Model building time: 1.831295517
+============================================
+Training data: ./data/training.txt
+Testing data: ./data/testing.txt
+Num iterations: 500
+Learning rate: 0.07
+Accuracy: 0.9087367835281024
+Model building time: 1.829932415

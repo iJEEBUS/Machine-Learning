@@ -12,7 +12,9 @@ class Neural_Network():
 		self.testing_data = None
 		self.testing_y = None
 		# Weights
-		self.theta = np.ones((64,10), dtype=float)	
+		self.theta_one = np.random.rand(50,64)	
+		self.theta_two = np.random.rand(50,10)
+		
 		# how long it took to train the model
 		self.time_to_train = None
 
@@ -67,13 +69,24 @@ class Neural_Network():
 	def sigmoid(self, matrix):
 		return 1.0 / (1 + np.exp(-matrix))
 	
-	def gradient_descent(self, theta, alpha, x, y):
-		m = x.shape[0]
-		h = self.sigmoid(np.matmul(x, theta))
-		grad = np.matmul(x.T, (h - y)) / m
-		theta = theta - (alpha * grad)
-		print(x.shape, theta.shape, h.shape, grad.shape, y.shape)
-		return theta
+	def gradient_descent(self, theta_one, theta_two, alpha, x, y):
+		num_obs = x.shape[0]
+	
+		# Apply weights to input layer
+		hidden_layer = self.sigmoid(np.dot(theta_one, x.T))
+		print(hidden_layer[:1])	
+		# Apply weights to hidden layer		
+		output_layer = self.sigmoid(np.dot(hidden_layer.T, theta_two))
+		
+		# Update layer 2 weights based on outputs
+		grad = np.matmul(y.T, (output_layer - y) ) / num_obs
+		theta_one = theta_one - (alpha * sum(sum(grad)))
+		theta_two = theta_two - (alpha * sum(sum(grad)))		
+		
+		
+#		print(f"one: {theta_one[:1]}")
+#		print(f"two: {theta_two[:1]}")
+		return theta_one, theta_two
 		
 	def new_cost(self, x, y, theta):
 		m = x.shape[0]
@@ -91,14 +104,17 @@ class Neural_Network():
 		X = self.training_data
 		Y = self.y_vectorized
 		print("Building model...")
+		
+		
 		# Since I am using linear algebra, all of the errors are propogated
 		# back into the weights immediately (backprop)
 		for i in range(iterations):
-			self.theta = self.gradient_descent(self.theta, learning_rate, X, Y)
+			self.theta_one, self.theta_two = self.gradient_descent(self.theta_one, self.theta_two, learning_rate, X, Y)
 		end = time.process_time()
 		self.time_to_train = end-begin
 		print("Model complete.")
-		np.savetxt(f"./models/{fout}", self.theta, delimiter=',')
+#		np.savetxt(f"./models/{fout}", self.theta, delimiter=',')
+	
 	def log(self, training, testing, iterations, alpha, correct, num_preds):
 		accuracy = correct / num_preds
 		with open("./logs/tests.txt", 'a') as f:
@@ -111,10 +127,11 @@ class Neural_Network():
 			f.write(f"Model building time: {self.time_to_train}\n")
 	
 	def test(self, training, testing, iterations, alpha):
-		
 		predictions = []
-		model = self.sigmoid(np.matmul(self.testing_data, self.theta))
-		for prediction in model:
+		hidden_layer = self.sigmoid(np.dot(self.theta_one, self.testing_data.T))
+		output_layer = self.sigmoid(np.dot(hidden_layer.T, self.theta_two))
+
+		for prediction in output_layer:
 			predictions.append(np.argmax(prediction))
 		
 		# count num correct
@@ -129,8 +146,8 @@ class Neural_Network():
 train = "./data/training.txt"
 test = "./data/testing.txt"
 fout = "handwriting.nn"
-iterations = 3000
-learning_step = 0.1
+iterations = 1000
+learning_step = 0.05
 net = Neural_Network()
 net.load_data(train, test)
 net.learn(iterations, learning_step, fout)
